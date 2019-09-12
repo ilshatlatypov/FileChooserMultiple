@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-file-chooser-multiple" version="1.0.0">
+   <name>FileChooserMultiple</name>
+
+   <js-module name="FileChooserMultiple" src="www/FileChooserMultiple.js">
+      <clobbers target="FileChooserMultiple" />
+   </js-module>
+
+   <platform name="android">
+      <config-file parent="/*" target="res/xml/config.xml">
+         <feature name="FileChooserMultiple">
+            <param name="android-package" value="cordova.plugin.file.chooser.multiple.FileChooserMultiple" />
+         </feature>
+      </config-file>
+      <config-file parent="/*" target="AndroidManifest.xml" />
+      <source-file src="src/android/FileChooserMultiple.java" target-dir="src/cordova/plugin/file/chooser/multiple/FileChooserMultiple" />
+   </platform>
+</plugin>

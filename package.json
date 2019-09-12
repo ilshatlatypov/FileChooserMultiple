@@ -1,0 +1,11 @@
+{
+  "name": "filechoosermultiple",
+  "version": "1.0.0",
+  "description": "Cordova plugin for Android to select multiple files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ilshat Latypov",
+  "license": "ISC"
+}
