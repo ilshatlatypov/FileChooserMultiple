@@ -10,5 +10,5 @@ module.exports.open = function (filter, success, failure) {
         success = filter;
         filter = {};
     }
-    exec(success, failure, "FileChooser", "open", [ filter ]);
+    exec(success, failure, 'FileChooserMultiple', 'open', [ filter ]);
 };
