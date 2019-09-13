@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class FileChooser extends CordovaPlugin {
+public class FileChooserMultiple extends CordovaPlugin {
 
     private static final String TAG = "FileChooser";
     private static final String ACTION_OPEN = "open";
