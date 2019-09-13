@@ -5,18 +5,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * This class echoes a string called from JavaScript.
- */
-public class FileChooserMultiple extends CordovaPlugin {
+public class FileChooser extends CordovaPlugin {
 
     private static final String TAG = "FileChooser";
     private static final String ACTION_OPEN = "open";
@@ -44,11 +40,9 @@ public class FileChooserMultiple extends CordovaPlugin {
         // type and title should be configurable
 
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
+        intent.setType(uri_filter);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/png", "image/jpeg", "application/pdf"});
 
         Intent chooser = Intent.createChooser(intent, "Select File");
         cordova.startActivityForResult(this, chooser, PICK_FILE_REQUEST);
