@@ -1,6 +1,6 @@
 {
   "name": "filechoosermultiple",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Cordova plugin for Android to select multiple files",
   "main": "index.js",
   "scripts": {

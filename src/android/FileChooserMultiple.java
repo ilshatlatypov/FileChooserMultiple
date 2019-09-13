@@ -1,48 +1,48 @@
 package cordova.plugin.file.chooser.multiple;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Modified version of FileChooser plugin: https://github.com/ihadeed/cordova-filechooser
+ * Support for multiple files to select
+ * Supported MIME types: image/png, image/jpeg, application/pdf
+ */
 public class FileChooserMultiple extends CordovaPlugin {
 
-    private static final String TAG = "FileChooser";
     private static final String ACTION_OPEN = "open";
     private static final int PICK_FILE_REQUEST = 1;
+    private static final String[] SUPPORTED_MIME_TYPES = new String[]{"image/png", "image/jpeg", "application/pdf"};
 
-    public static final String MIME = "mime";
-
-    CallbackContext callback;
+    private CallbackContext callback;
 
     @Override
-    public boolean execute(String action, JSONArray inputs, CallbackContext callbackContext) throws JSONException {
-
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
         if (action.equals(ACTION_OPEN)) {
-            JSONObject filters = inputs.optJSONObject(0);
-            chooseFile(filters, callbackContext);
+            chooseFile(callbackContext);
             return true;
         }
-
         return false;
     }
 
-    public void chooseFile(JSONObject filter, CallbackContext callbackContext) {
-        String uri_filter = filter.has(MIME) ? filter.optString(MIME) : "*/*";
-
-        // type and title should be configurable
-
+    private void chooseFile(CallbackContext callbackContext) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType(uri_filter);
+        intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, SUPPORTED_MIME_TYPES);
 
         Intent chooser = Intent.createChooser(intent, "Select File");
         cordova.startActivityForResult(this, chooser, PICK_FILE_REQUEST);
@@ -55,32 +55,33 @@ public class FileChooserMultiple extends CordovaPlugin {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == PICK_FILE_REQUEST && callback != null) {
-
             if (resultCode == Activity.RESULT_OK) {
-
-                Uri uri = data.getData();
-
-                if (uri != null) {
-
-                    Log.w(TAG, uri.toString());
-                    callback.success(uri.toString());
-
-                } else {
-
-                    callback.error("File uri was null");
-
+                List<Uri> uris = getResultUris(data);
+                List<String> uriStrings = new ArrayList<>(uris.size());
+                for (Uri uri : uris) {
+                    uriStrings.add(uri.toString());
                 }
-
+                callback.success(new JSONArray(uriStrings));
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                // keep this string the same as in iOS document picker plugin
-                // https://github.com/iampossible/Cordova-DocPicker
-                callback.error("User canceled.");
+                callback.success(new JSONArray(Collections.emptyList()));
             } else {
-
                 callback.error(resultCode);
             }
         }
+    }
+
+    private List<Uri> getResultUris(Intent data) {
+        List<Uri> uris = new ArrayList<>();
+        if (data.getClipData() != null) {
+            ClipData clipData = data.getClipData();
+            int itemCount = clipData.getItemCount();
+            for(int i = 0; i < itemCount; i++) {
+                uris.add(clipData.getItemAt(i).getUri());
+            }
+        } else if (data.getData() != null) {
+            uris.add(data.getData());
+        }
+        return uris;
     }
 }
