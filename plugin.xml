@@ -3,7 +3,7 @@
    <name>FileChooserMultiple</name>
 
    <js-module name="FileChooserMultiple" src="www/FileChooserMultiple.js">
-      <clobbers target="FileChooserMultiple" />
+      <clobbers target="fileChooserMultiple" />
    </js-module>
 
    <platform name="android">
@@ -13,6 +13,6 @@
          </feature>
       </config-file>
       <config-file parent="/*" target="AndroidManifest.xml" />
-      <source-file src="src/android/FileChooserMultiple.java" target-dir="src/cordova/plugin/file/chooser/multiple/FileChooserMultiple" />
+      <source-file src="src/android/FileChooserMultiple.java" target-dir="src/cordova/plugin/file/chooser/multiple" />
    </platform>
 </plugin>
